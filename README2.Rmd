@@ -26,7 +26,7 @@ The dataset that I chose to investigate further was the [Immunohistochemical typ
 I am specifically working with the dataset that was found in the raw folder in "pcbil_clinicaldata.xlsx". This can be fund in my repository folder at  ["pcbil_clinicaldata.xlsx"](data/pcbil_clinicaldata.xlsx). Now I will specifically be working with data that is found at ["pcbil_clinicaldata.xlsx"](data/pcbil_clinicaldata.xlsx) but in the "PLOS Revision" tab. I have placed the data that was in the "PLOS Revision" tab into a new csv file found [here](data/pcbil_clinicaldata_PLOS_REVISION.csv). 
 
 
-
+The paper delves into Adenocarcinomas of the pancreatobiliary system and how they are classified. This data comes from an observational cohort study on patients with Adenocarcinoma of the pancreatobiliary system. Certain morphological features of carcinomas make it difficult to distinguish between carcinomas. For instance intrahepatic cholangiocarcinoma is difficult to distinguish based on morphology so other factors such as immunhistochemistry may be used. 
 
 ## Project organization
 
@@ -38,9 +38,13 @@ Within the data folder, I have placed the dataset that I extracted from DRYAD. T
 
 Citation and link to data
 
+I will specifically be working with data that is found at ["pcbil_clinicaldata.xlsx"](data/pcbil_clinicaldata.xlsx) but in the "PLOS Revision" tab. I have placed the data that was in the "PLOS Revision" tab into a new csv file found [here](data/pcbil_clinicaldata_PLOS_REVISION.csv). 
+
 ## About the analysis
 
 Information about other things useful to know for the context of the overall project.
+
+3. One fun question that I wanted to ask with R is: Is there a sex-based differences in identifying if a patient has intrahepatic cholangiocarcinoma? Additionally with this question, I wanted to see if there are also differences in care. For instance, are males more likely to receive chemo than females in this subset?
 
 ##Reproducibility
 
