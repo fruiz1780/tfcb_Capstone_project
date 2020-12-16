@@ -60,7 +60,9 @@ Information about other things useful to know for the context of the overall pro
 Proposal of diagnostic immunohistochemical panel for the classification of the immunohistochemical tumor types.
 Extrahepatic pancreatobiliary,	Intestinal,	Intrahepatic cholangiocarcinoma,	Hepatocellular carcinoma
 
-1. The authors noted that females with adenocarcinoma of the pancreato-biliary system had a lower median overall survival (months) than males (Table 2 in their paper). One question I wanted to ask was if females with Hepatocellular Cancer, so the control cancer, had a lower median overall survival than males.
+1. The authors noted that females with adenocarcinoma of the pancreato-biliary system had a lower median overall survival (months) than males (Table 2 in their paper). One question I wanted to ask was if females with Hepatocellular Cancer, so the control cancer, had a lower overall survival than males.
+
+2. One question that I wanted ask
 
 3. One fun question that I wanted to ask with R is: Is there a sex-based differences in identifying if a patient has intrahepatic cholangiocarcinoma? Additionally with this question, I wanted to see if there are also differences in care. For instance, are males more likely to receive chemo than females in this subset?
 

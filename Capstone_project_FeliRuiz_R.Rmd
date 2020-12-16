@@ -24,16 +24,55 @@ Filtered <- read.csv(file = "data/Filtered_edit_df.csv")
 Filtered
 "Filtered datset currently 391 Rows"
 ```
-
+#1. The authors noted that females with adenocarcinoma of the pancreato-biliary system had a lower median overall survival (months) than males (Table 2 in their paper). One question I wanted to ask was if females with Hepatocellular Cancer, so the control cancer, had a lower overall survival than males.
 ```{r}
 # You are reading in the csv file into a tibble assigned as 'Filtered'.
 Filtered2 <- Filtered %>%
   #Using pipe %>% operator to chain commands. Select() command to keep only the columns: pad (to later sort by pathological diagnosis), gender and chemo (becuase I am interesed in the discrepancy between gender and chemo).
-  select(pad_only, gender, Age..in.days.) %>%
-  arrange(gender, pad_only) %>%
+  select(pad_only, gender, Age..in.days.) 
+Filtered3 <- Filtered2[grep("Hepatocellular", Filtered2$pad_only), ] 
 
+Filtered5 <-Filtered3 %>%
+  arrange(-(Age..in.days.)) %>%
+  
+  mutate(Age_in_days=Age..in.days., Tumor_sample=pad_only) %>%
+  select(Tumor_sample, gender, Age_in_days) %>%
+  #count(gender)%>%
   #Now you are printing what you have selected and filtered with the chained commands. 
   print()
+
+Filtered4 <-Filtered3 %>%
+  arrange(-(Age..in.days.)) %>%
+  slice(0:10) %>%
+  mutate(Age_in_days=Age..in.days., Tumor_sample=pad_only) %>%
+  select(Tumor_sample, gender, Age_in_days) %>%
+  #count(gender)%>%
+  #Now you are printing what you have selected and filtered with the chained commands. 
+  print()
+
+
+#gender
+#f	13			
+#m	62
+
+```
+#I find just by visually looking at the table that is printed from 'Filter4' that there are more males in the eldest group of 10 people that were found to have Hepatocellular Cancer. This was done by looking at the "Age_in_days" column I see that there are more males than females in the older age group. One way that we can visuLize this is by using ggplot down below. We see that in the eldest 10 patients ggplot, we see that males dominate are the predominate gender in this subset. In entire Hepatocellular Cancer group, it is less appareant that males live longer than females beucase there are more males enrolled in this Hepatocellular Cancer group cohort study than females. This is could be a confounding variable in the authors study as this control group consists of males. It would be interesting to learn more about the demographics of this cohort study to drawing more analysis.
+
+```{r}
+plot_with_subset <- ggplot(Filtered4, aes(x = gender,
+                 y = Age_in_days)) +
+  geom_point()+
+  theme_classic()+
+  labs(x = "Gender of patient", y= "Age of patient (in days)", title="Age Distribution of Hepatocellular Cancer based on gender (eldest 10 patients)")
+
+plot_with_subset
+
+plot_with_all <- ggplot(Filtered5, aes(x = gender,
+                 y = Age_in_days)) +
+  theme_classic()+
+  geom_point()+
+  labs(x = "Gender of patient", y= "Age of patient (in days)", title="Age Distribution of Hepatocellular Cancer based on gender (all data)")
+plot_with_all
 ```
 
 
