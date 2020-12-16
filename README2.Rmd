@@ -28,6 +28,8 @@ I am specifically working with the dataset that was found in the raw folder in "
 
 The paper delves into Adenocarcinomas of the pancreatobiliary system and how they are classified. This data comes from an observational cohort study on patients with Adenocarcinoma of the pancreatobiliary system. Certain morphological features of carcinomas make it difficult to distinguish between carcinomas. For instance intrahepatic cholangiocarcinoma is difficult to distinguish based on morphology so other factors such as immunhistochemistry may be used. 
 
+"hepatocellular carcinoma is the control tumor type becuase immunohistochemistry is well-characterized"
+
 ## Project organization
 
 Information about things in this project
@@ -40,9 +42,25 @@ Citation and link to data
 
 I will specifically be working with data that is found at ["pcbil_clinicaldata.xlsx"](data/pcbil_clinicaldata.xlsx) but in the "PLOS Revision" tab. I have placed the data that was in the "PLOS Revision" tab into a new csv file found [here](data/pcbil_clinicaldata_PLOS_REVISION.csv). 
 
+One assumptions I made about the data was the last time it was assessed. This is an observationaly data set that followed patients until August 2016. One of my questions involved age and so I assumed if the date od death was not listed, then they were still alive at least until the last time the data was assessed. I'm not sure exactly what day in August 2016 they stopped being followed but I listed the "date of death" as the last day the data was assessed just so that I can calculate Age based on days. So I did change the cells from "NaN" to present so that I could calculate the age. This edited csv file can be found [here](data/pcbil_clinicaldata_PLOS_REVISION_edited.csv).
+
+Since I am using the datset that has already been precoessed by the group, I will describe a little what pre-processing the group did. They had originally used 38 antibody markers but reduced it down to 27 due to missing data. These markers are used commonly for diagnosing pathology such as markers for mucins to be able to distinguish between squamous and glandular and so.
+Additionally, they imputed the dataset with the Bioconductor package “impute”. My analysis will be on the imputed dataset.
+
+
+
 ## About the analysis
 
 Information about other things useful to know for the context of the overall project.
+
+#immunohistochemical markers comparison?
+#probe used? type of probe (biopsy/resection
+#further understand the differences in marker expression between the immunohistochemical tumor types
+
+Proposal of diagnostic immunohistochemical panel for the classification of the immunohistochemical tumor types.
+Extrahepatic pancreatobiliary,	Intestinal,	Intrahepatic cholangiocarcinoma,	Hepatocellular carcinoma
+
+1. The authors noted that females with adenocarcinoma of the pancreato-biliary system had a lower median overall survival (months) than males (Table 2 in their paper). One question I wanted to ask was if females with Hepatocellular Cancer, so the control cancer, had a lower median overall survival than males.
 
 3. One fun question that I wanted to ask with R is: Is there a sex-based differences in identifying if a patient has intrahepatic cholangiocarcinoma? Additionally with this question, I wanted to see if there are also differences in care. For instance, are males more likely to receive chemo than females in this subset?
 

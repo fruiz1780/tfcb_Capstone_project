@@ -7,15 +7,33 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-
+#Load tidyverse first
 ```{r}
+
 library(tidyverse)
+```
+#Then I will configure file names
+```{r}
+Raw_markers <- read.csv(file = "data/pcbil_raw.csv", row.names = 39, colClasses
+= c(rep("numeric",38), rep("character",2)), na.strings = "?", quote="'" )
+
+Filtered <- read.csv(file = "data/Filtered_edit_df.csv")
+
+#Raw_markers
+
+Filtered
+"Filtered datset currently 391 Rows"
 ```
 
 ```{r}
-Filtered <- read_csv("data/pcbil_clinicaldata_PLOS_REVISION.csv")
-Filtered
-"Currently 391 Rows"
+# You are reading in the csv file into a tibble assigned as 'Filtered'.
+Filtered2 <- Filtered %>%
+  #Using pipe %>% operator to chain commands. Select() command to keep only the columns: pad (to later sort by pathological diagnosis), gender and chemo (becuase I am interesed in the discrepancy between gender and chemo).
+  select(pad_only, gender, Age..in.days.) %>%
+  arrange(gender, pad_only) %>%
+
+  #Now you are printing what you have selected and filtered with the chained commands. 
+  print()
 ```
 
 
@@ -23,7 +41,7 @@ Filtered
 ```{r}
 
 # You are reading in the csv file into a tibble assigned as 'Filtered'.
-Filtered <- read_csv("data/pcbil_clinicaldata_PLOS_REVISION.csv") %>%
+Filtered <- Filtered %>%
   #Using pipe %>% operator to chain commands. Select() command to keep only the columns: pad (to later sort by pathological diagnosis), gender and chemo (becuase I am interesed in the discrepancy between gender and chemo).
   select(pad, gender, chemo) %>%
   #Further pipe `Filtered` to filter for all data except instances where it is unknown if patients were treated with chemotherapy or the gender is unknown.
@@ -55,8 +73,13 @@ Filtered
 
 ```{r, fig.width=4, fig.height=4}
 Filtered %>%
-  select(`Gender (m/male or f/female)`, `Chemoterapy treated  (y/yes or n/no)`) %>%
-  ggplot(aes(x=`Gender (m/male or f/female)`, y=`Chemoterapy treated  (y/yes or n/no)`)) 
+  select(`Pathological diagnosis`, `Gender (m/male or f/female)`, `Chemoterapy treated  (y/yes or n/no)`) %>%
+ # count(`Pathological diagnosis`, `Gender (m/male or f/female)`)%>%
+  count(`Gender (m/male or f/female)`, `Chemoterapy treated  (y/yes or n/no)`)%>%
+  arrange(-n) %>%
+  print()
+
+#  ggplot(aes(x=`Gender (m/male or f/female)`, y=`Chemoterapy treated  (y/yes or n/no)`)) 
 ```
 
 **In problems 4 through 6, assign the result of your operation back to the `data`
