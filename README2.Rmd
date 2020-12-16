@@ -64,7 +64,8 @@ Extrahepatic pancreatobiliary,	Intestinal,	Intrahepatic cholangiocarcinoma,	Hepa
 
 2. Continung with the theme of gender differences within disease groups, I wanted to see if there are also differences in care. For instance, are males more likely to receive chemotherapy than females in each adenocarcinoma disease group and in the hepatocellular carcinoma group? I will answer this question in Python.
 
-3. One fun question that I wanted to ask with R is: Is there a sex-based differences in identifying if a patient has intrahepatic cholangiocarcinoma? Additionally with this question, 
+3. Continung with the theme of gender differences in this dataset, I wanted to investigate if there are gender preferences when using a specific diagnostic probe. Is the diagnostic probe biopsy more often used on females than males? if there are preferences, do these preferences hold with different disease groups. I will answer this question in Python.
+
 
 ##Reproducibility
 
