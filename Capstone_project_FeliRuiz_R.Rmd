@@ -6,20 +6,24 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+#TITLE: Are there gender differences between and within each carcinoma disease group?
 
-#Load tidyverse first
+#About the data:
+The question that I wanted to ask with R was an age question between males and females. I wanted to add age column to my dataset for problem 1 in R. But I didn't know quite how to do it in R so I did it in python. I then saved the new datset that now has a new column to a ['Filtered_edit_df.csv'](data/Filtered_edit_df.csv). I used this file to answer my question below
+
+#Questions that I will ask with R
+1. The authors noted that females with adenocarcinoma of the pancreato-biliary system had a lower median overall survival (months) than males (Table 2 in their paper). One question I wanted to ask was if females with Hepatocellular Cancer, so the control cancer, had a lower overall survival than males.
+
+#Assumptions
+Since this dataset is an observational study and there may be patients that are still alive, I do make a major assumption. If the date_death column is does not have a date, then I assume that person is still alive. Since this data was last assessed in August, 2016I assume the date is 01. I use these assumptions to calculate the age of these individuals in python and add that age to a new column. This dataset is then processed in R to answer the question above.
+##Load tidyverse first
 ```{r}
 
 library(tidyverse)
 ```
-#Then I will configure file names
+##Then I will configure file names
 ```{r}
-Raw_markers <- read.csv(file = "data/pcbil_raw.csv", row.names = 39, colClasses
-= c(rep("numeric",38), rep("character",2)), na.strings = "?", quote="'" )
-
 Filtered <- read.csv(file = "data/Filtered_edit_df.csv")
-
-#Raw_markers
 
 Filtered
 "Filtered datset currently 391 Rows"
@@ -32,15 +36,17 @@ Filtered2 <- Filtered %>%
   select(pad_only, gender, Age..in.days.) 
 Filtered3 <- Filtered2[grep("Hepatocellular", Filtered2$pad_only), ] 
 
+#Here I wanted to arrange by age with the eldest age (in days) at the top
 Filtered5 <-Filtered3 %>%
   arrange(-(Age..in.days.)) %>%
-  
+  #I wanted to change the name of the columns
   mutate(Age_in_days=Age..in.days., Tumor_sample=pad_only) %>%
   select(Tumor_sample, gender, Age_in_days) %>%
-  #count(gender)%>%
-  #Now you are printing what you have selected and filtered with the chained commands. 
+ 
   print()
-
+```
+```{r}
+#Here I just wanted to subset the 10 eldest people in the Hepatocellular Carcinoma group
 Filtered4 <-Filtered3 %>%
   arrange(-(Age..in.days.)) %>%
   slice(0:10) %>%
@@ -59,6 +65,7 @@ Filtered4 <-Filtered3 %>%
 #I find just by visually looking at the table that is printed from 'Filter4' that there are more males in the eldest group of 10 people that were found to have Hepatocellular Cancer. This was done by looking at the "Age_in_days" column I see that there are more males than females in the older age group. One way that we can visuLize this is by using ggplot down below. We see that in the eldest 10 patients ggplot, we see that males dominate are the predominate gender in this subset. In entire Hepatocellular Cancer group, it is less appareant that males live longer than females beucase there are more males enrolled in this Hepatocellular Cancer group cohort study than females. This is could be a confounding variable in the authors study as this control group consists of males. It would be interesting to learn more about the demographics of this cohort study to drawing more analysis.
 
 ```{r}
+#Now I will make a plot to show the age distribution (in days) of patients in the Hepatocellular Cancer group based on gender but only the 10 eldest folks
 plot_with_subset <- ggplot(Filtered4, aes(x = gender,
                  y = Age_in_days)) +
   geom_point()+
@@ -67,6 +74,7 @@ plot_with_subset <- ggplot(Filtered4, aes(x = gender,
 
 plot_with_subset
 
+#Now I will make a plot to show the age distribution (in days) of patients in the Hepatocellular Cancer group based on gender (all data) 
 plot_with_all <- ggplot(Filtered5, aes(x = gender,
                  y = Age_in_days)) +
   theme_classic()+
@@ -75,233 +83,11 @@ plot_with_all <- ggplot(Filtered5, aes(x = gender,
 plot_with_all
 ```
 
+#Visualization Justification
+I chose to use ggplot() with geom_point() to iluustrate the distribution of ages. I beieve that a histogram would limit the analysis but geom_point() would clearly depict all the points. 
 
-
-```{r}
-
-# You are reading in the csv file into a tibble assigned as 'Filtered'.
-Filtered <- Filtered %>%
-  #Using pipe %>% operator to chain commands. Select() command to keep only the columns: pad (to later sort by pathological diagnosis), gender and chemo (becuase I am interesed in the discrepancy between gender and chemo).
-  select(pad, gender, chemo) %>%
-  #Further pipe `Filtered` to filter for all data except instances where it is unknown if patients were treated with chemotherapy or the gender is unknown.
-  filter(!is.na(chemo)) %>%
-  filter(!is.na(gender)) %>%
-  #Now you are printing what you have selected and filtered with the chained commands. 
-  print()
-
-"Now filtered down to 372 rows. "
-
-```
-
-```{r}
-# You are reading in the tsv file into a tibble assigned as 'data'.Pipe operator to chain commands
-Filtered <- Filtered %>%
-  #Will rename() to change column name. 
-  rename('Chemoterapy treated  (y/yes or n/no)' = "chemo") %>%
-  rename('Pathological diagnosis' = "pad") %>%
-  rename('Gender (m/male or f/female)' = "gender") %>%
-  #Now printing all rows of 'Filtered' dataset
-  print()
-#write_csv(data, "hw_6_file.tsv") 
-```
-
-```{r}
-Filtered
-```
-
-
-```{r, fig.width=4, fig.height=4}
-Filtered %>%
-  select(`Pathological diagnosis`, `Gender (m/male or f/female)`, `Chemoterapy treated  (y/yes or n/no)`) %>%
- # count(`Pathological diagnosis`, `Gender (m/male or f/female)`)%>%
-  count(`Gender (m/male or f/female)`, `Chemoterapy treated  (y/yes or n/no)`)%>%
-  arrange(-n) %>%
-  print()
-
-#  ggplot(aes(x=`Gender (m/male or f/female)`, y=`Chemoterapy treated  (y/yes or n/no)`)) 
-```
-
-**In problems 4 through 6, assign the result of your operation back to the `data`
-variable.**
-
-## Problem 4
-
-**10 points**
-
-Write a code chunk to select the following columns
-from the `data` variable you created above
-and reassign back to `data`.
-```{r}
-data <-data %>%
-  select(ensembl_gene_id, CD34_shRPL5_RPF_1, CD34_shRPL5_RPF_2, CD34_shRPL5_RNA_1, CD34_shRPL5_RNA_2,
-         CD34_shRPS19_RPF_1, CD34_shRPS19_RPF_2, CD34_shRPS19_RNA_1, CD34_shRPS19_RNA_2, CD34_shLuc_RPF_1,
-         CD34_shLuc_RPF_2, CD34_shLuc_RNA_1, CD34_shLuc_RNA_2)
-  
-```
+#Reproducibility
+Since I just both R and python, I do believe my analysis is reproducibile. I'm sure there are ways to calculate age in R but I wasn't sure. There might be a more conveient way than using both R and python to answer this question.
 
 
 
-## Problem 5
-
-**10 points**
-
-Write a code chunk to filter the result from Problem 4 to include
-only rows where each of the 12 numerical columns
-you selected has 50 counts or more  and reassign back to `data`.
-This is a simple way to avoid genes that have
-very low counts. You might be tempted to do this step separately for
-each of the 12 columns, but
-you will receive 5 bonus points if you instead use the `filter_if`
-and `all_vars` functions you learned above.
-```{r}
-data <-data %>%
-  filter_if(is.numeric, all_vars(. >= 50)) %>%
-  print()
-
-#write_csv(data, "hw_6_file2.tsv") 
-
-```
-
-## Problem 6
-
-
-**10 points**
-
-Write a code chunk to divide each of the 12 numerical columns by the
-corresponding median value for each column
-and reassign back to `data`. This median normalization is typically done in
-high-throughput experiments after filtering
-to normalize for sample-to-sample difference in read depth.
-Again, you can write lot less code if you use the `mutate_if` and `funs` functions
-you learned above.
-
-```{r}
-
-data <-data %>%
-  #filter_if(is.numeric, all_vars(. >= 50)) %>%
-  mutate_if(is.numeric, funs(./median(.))) %>%
-  print()
-
-```
-  # mutate( CD34_shRPL5_RPF_1 = CD34_shRPL5_RPF_1/median(CD34_shRPL5_RPF_1),
-  #         CD34_shRPL5_RPF_2=CD34_shRPL5_RPF_2/median(CD34_shRPL5_RPF_2),
-  #         CD34_shRPL5_RNA_1=CD34_shRPL5_RNA_1/median(CD34_shRPL5_RNA_1),
-  #         CD34_shRPL5_RNA_2=CD34_shRPL5_RNA_2/median(CD34_shRPL5_RNA_2),
-  #         CD34_shRPS19_RPF_1=CD34_shRPS19_RPF_1/median(CD34_shRPS19_RPF_1), 
-  #         CD34_shRPS19_RPF_2=CD34_shRPS19_RPF_2/median(CD34_shRPS19_RPF_2), 
-  #         CD34_shRPS19_RNA_1=CD34_shRPS19_RNA_1/median(CD34_shRPS19_RNA_1), 
-  #         CD34_shRPS19_RNA_2= CD34_shRPS19_RNA_2/median(CD34_shRPS19_RNA_2), 
-  #         CD34_shLuc_RPF_1=CD34_shLuc_RPF_1/median(CD34_shLuc_RPF_1),
-  #         CD34_shLuc_RPF_2=CD34_shLuc_RPF_2/median(CD34_shLuc_RPF_2),
-  #         CD34_shLuc_RNA_1=CD34_shLuc_RNA_1/median(CD34_shLuc_RNA_1),
-  #         CD34_shLuc_RNA_2=CD34_shLuc_RNA_2/median(CD34_shLuc_RNA_2)
-  #         )%>%
-
-## Problem 7 
-
-**10 points**
-
-After we do the above filtering and median-normalization, let us calculate
-translation efficiency as the average ratio of the RPF and RNA reads for each
-treatment condition. Then we calculate how this translation efficiency changes
-between target (`rpl5` and `rps19`) and control (`luc`) shRNAs.
-
-The code implementing the above steps is shown below, but it has a few
-errors. Correct them.
-
-```{r}
-library(tidyverse)
-library(tibble)
-library(tidyr)
-library(readr)
-library(ggplot2)
-lfc <- data %>%
-  mutate(mean_rpl5_te = ((CD34_shRPL5_RPF_1 + CD34_shRPL5_RPF_2) /
-                            (CD34_shRPL5_RNA_1 + CD34_shRPL5_RNA_2)) )%>%
-  mutate(mean_rps19_te = ((CD34_shRPS19_RPF_1 + CD34_shRPS19_RPF_2) /
-                            (CD34_shRPS19_RNA_1 + CD34_shRPS19_RNA_2)) )%>%
-  mutate(mean_shluc_te = ((CD34_shLuc_RPF_1 + CD34_shLuc_RPF_2) /
-                            (CD34_shLuc_RNA_1 + CD34_shLuc_RNA_2))) %>%
-
-  select(ensembl_gene_id, mean_rpl5_te, mean_rps19_te, mean_shluc_te) %>%
-  mutate(lfc_te_rpl5 = log2(mean_rpl5_te / mean_shluc_te),
-         lfc_te_rps19 = log2(mean_rps19_te / mean_shluc_te)) %>%
-  print()
-#write_csv(lfc, "hw_6_file_problem7.tsv") 
-```
-
-
-
-## Problem 8 
-
-**10 points**
-
-Write code that will create a new dataframe called `mean_lfc` from `lfc`
-containing a new column called `avg_lfc`.
-`avg_lfc` should be the average of the log2 fold-change in TE (`lfc_te`) upon
-knockdown of RPL5 and RPS19.
-
-Then select only the gene id column and the new column that you just created
-(this will be your new dataframe `mean_lfc`).
-```{r}
-mean_lfc <-lfc %>%
-  mutate(avg_lfc =((lfc_te_rpl5+lfc_te_rps19)/2) ) %>%
-  select(ensembl_gene_id, avg_lfc ) %>%
-  print()
-  
-
-```
-
-
-## Problem 9
-
-**10 points**
-
-Write code to join the `mean_lfc` dataframe with the `annotations` dataframe created
-at the top of the document and assign back to `mean_lfc`.
-```{r}
-mean_lfc <- mean_lfc %>%
-  left_join(annotations, by = "ensembl_gene_id") %>% 
-  print()
-#or full_join()
-```
-
-
-
-
-## Problem 10 
-
-**10 points**
-
-1. Write code to select only the bottom 10 genes with the
-lowest `avg_lfc` and display the
-gene `symbol`, gene `name` and `avg_lfc` for these genes.
-2. Create a figure using ggplot to visualize these results.
-Write a few sentences to justify the choices you made when creating your figure.
-```{r}
-mean_lfc %>%
-  #group_by(ensembl_gene_id) %>%
-  select("name", "symbol", "avg_lfc")%>%
-  arrange(avg_lfc) %>%
-  slice(0:10)%>%
-  print()%>%
-  ggplot(aes(x = symbol, y = avg_lfc, label= round(avg_lfc, 2) )) +
-  geom_point() +
-  geom_text( hjust = 0, nudge_y = 0.1, nudge_x = -0.1,  size=5)+
-  theme_classic()+
-  scale_y_continuous(limit= c(-3,-1)) +
-  
-  labs(x = "Gene symbol", y= "Average of the log2 fold-change in TE", size=5)
- #print("name", "symbol", "avg_lfc" )
-
-'Explanation of figure: I chose to use `theme_classic()` becuase I wanted to remove the grey background and just have a white background. I adjusted the y-axis with `scale_y_continuous` in order to  make the position of the data slightly more visually appealing. I used `geom_text` to label each data point with the gene symbol. I modified the label so the text is slightly to the right of the data point. I chose to use `geom_point` because `geom_hist` might have had overlap. With `geom_point`, I could show the discrete data points. '
-  
-  #filter(min_rank(avg_lfc)<= 10)
-```
-
-
-
-
-**When you are satisfied with your code and answers,
-use the "Knit" button in RStudio to create the final set of files.
-Save the result as a PDF and  and submit it.**
